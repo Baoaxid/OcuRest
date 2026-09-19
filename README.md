@@ -52,7 +52,7 @@ Instead of relying only on a rigid timer, OcuRest uses computer vision to check 
 #### 1. Clone the project
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Baoaxid/OcuRest.git
 cd OcuRest
 ```
 
@@ -173,7 +173,7 @@ Thay vì chỉ dựa vào bộ hẹn giờ cố định, OcuRest sử dụng th�
 #### 1. Clone dự án
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Baoaxid/OcuRest.git
 cd OcuRest
 ```
 
