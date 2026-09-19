@@ -1,0 +1,32 @@
+{
+  "app": {
+    "title": "OcuRest"
+  },
+  "mode": {
+    "work": "Mode: Working",
+    "rest": "Mode: Resting"
+  },
+  "subtext": {
+    "work_active": "Tracking visual focus",
+    "work_paused": "Paused (Away: {sec}s)",
+    "rest_camera": "Valid: Look away OR close eyes",
+    "rest_fallback": "Valid: Hands off keyboard & mouse"
+  },
+  "controls": {
+    "sound_on": "Sound: ON",
+    "sound_off": "Sound: OFF",
+    "choose_sound": "Change Audio",
+    "default_sound": "Default Beep"
+  },
+  "source": {
+    "camera": "Source: Camera (Head Pose + EAR)",
+    "fallback": "Source: Keyboard & Mouse (No Camera)"
+  },
+  "alert": {
+    "work_title": "20 Minutes Reached",
+    "work_camera": "20 minutes of screen focus completed!\n\nClick OK and look 20 feet away or CLOSE EYES for 20 seconds.",
+    "work_fallback": "20 minutes of work completed!\n\nClick OK and step away from KEYBOARD/MOUSE for 20 seconds.",
+    "rest_title": "Rest Completed",
+    "rest_msg": "20 seconds of continuous eye rest finished!\n\nClick OK to resume working."
+  }
+}

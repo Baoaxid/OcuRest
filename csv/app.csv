@@ -1,0 +1,19 @@
+key1,key2,vi,en
+app,title,OcuRest,OcuRest
+mode,work,Chế độ: Đang làm việc,Mode: Working
+mode,rest,Chế độ: Đang nghỉ ngơi,Mode: Resting
+subtext,work_active,Đang ghi nhận tập trung,Tracking visual focus
+subtext,work_paused,Tạm dừng (Vắng mặt: {sec}s),Paused (Away: {sec}s)
+subtext,rest_camera,Hợp lệ: Nhìn ra xa HOẶC nhắm mắt,Valid: Look away OR close eyes
+subtext,rest_fallback,Hợp lệ: Không chạm chuột & phím,Valid: Hands off keyboard & mouse
+controls,sound_on,Âm thanh: BẬT,Sound: ON
+controls,sound_off,Âm thanh: TẮT,Sound: OFF
+controls,choose_sound,Đổi chuông,Change Audio
+controls,default_sound,Chuông mặc định,Default Beep
+source,camera,Nguồn: Camera (Head Pose + EAR),Source: Camera (Head Pose + EAR)
+source,fallback,Nguồn: Chuột & Phím (Không có Camera),Source: Keyboard & Mouse (No Camera)
+alert,work_title,Hết 20 phút làm việc,20 Minutes Reached
+alert,work_camera,"Đã đủ 20 phút nhìn màn hình!\n\nNhấn OK và nhìn ra xa 6m hoặc NHẮM MẮT trong 20 giây.","20 minutes of screen focus completed!\n\nClick OK and look 20 feet away or CLOSE EYES for 20 seconds."
+alert,work_fallback,"Đã đủ 20 phút làm việc liên tục!\n\nNhấn OK và RỜI TAY KHỎI BÀN PHÍM/CHUỘT trong 20 giây.","20 minutes of work completed!\n\nClick OK and step away from KEYBOARD/MOUSE for 20 seconds."
+alert,rest_title,Hoàn thành nghỉ ngơi,Rest Completed
+alert,rest_msg,Đã nghỉ đủ 20 giây liên tục!\n\nNhấn OK để quay lại làm việc.,20 seconds of continuous eye rest finished!\n\nClick OK to resume working.

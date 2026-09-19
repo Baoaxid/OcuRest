@@ -1,0 +1,32 @@
+{
+  "app": {
+    "title": "OcuRest"
+  },
+  "mode": {
+    "work": "Chế độ: Đang làm việc",
+    "rest": "Chế độ: Đang nghỉ ngơi"
+  },
+  "subtext": {
+    "work_active": "Đang ghi nhận tập trung",
+    "work_paused": "Tạm dừng (Vắng mặt: {sec}s)",
+    "rest_camera": "Hợp lệ: Nhìn ra xa HOẶC nhắm mắt",
+    "rest_fallback": "Hợp lệ: Không chạm chuột & phím"
+  },
+  "controls": {
+    "sound_on": "Âm thanh: BẬT",
+    "sound_off": "Âm thanh: TẮT",
+    "choose_sound": "Đổi chuông",
+    "default_sound": "Chuông mặc định"
+  },
+  "source": {
+    "camera": "Nguồn: Camera (Head Pose + EAR)",
+    "fallback": "Nguồn: Chuột & Phím (Không có Camera)"
+  },
+  "alert": {
+    "work_title": "Hết 20 phút làm việc",
+    "work_camera": "Đã đủ 20 phút nhìn màn hình!\n\nNhấn OK và nhìn ra xa 6m hoặc NHẮM MẮT trong 20 giây.",
+    "work_fallback": "Đã đủ 20 phút làm việc liên tục!\n\nNhấn OK và RỜI TAY KHỎI BÀN PHÍM/CHUỘT trong 20 giây.",
+    "rest_title": "Hoàn thành nghỉ ngơi",
+    "rest_msg": "Đã nghỉ đủ 20 giây liên tục!\n\nNhấn OK để quay lại làm việc."
+  }
+}
