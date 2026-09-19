@@ -1,266 +1,168 @@
 # OcuRest - Intelligent 20-20-20 Rule Guardian
 
 <p align="center">
+  <img src="assets/icon.ico" width="96" height="96" alt="OcuRest Logo" />
+</p>
+
+<p align="center">
   <b>A lightweight, privacy-first Windows background utility that automates the 20-20-20 rule using Computer Vision and Head Pose Estimation.</b><br>
   <i>Ứng dụng chạy ngầm bảo vệ thị lực theo quy tắc 20-20-20 sử dụng Thị giác máy tính và Ước lượng hướng nhìn trên Windows.</i>
+</p>
+
+<p align="center">
+  <a href="[https://github.com/Baoaxid/OcuRest/releases/tag/v1.0.0](https://github.com/Baoaxid/OcuRest/releases/tag/v1.0.0)"><img src="[https://img.shields.io/github/v/release/Baoaxid/OcuRest?color=0f766e&label=Release](https://img.shields.io/github/v/release/Baoaxid/OcuRest?color=0f766e&label=Release)" alt="Release Version"></a>
+  <img src="[https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-blue](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-blue)" alt="Platform">
+  <img src="[https://img.shields.io/badge/Python-3.9%2B-blue](https://img.shields.io/badge/Python-3.9%2B-blue)" alt="Python Version">
+  <img src="[https://img.shields.io/badge/Privacy-100%25%20Local-success](https://img.shields.io/badge/Privacy-100%25%20Local-success)" alt="Privacy">
 </p>
 
 ---
 
 ## Language / Ngôn ngữ
-
 - [English](#english)
 - [Tiếng Việt](#tiếng-việt)
 
 ---
 
+<a name="english"></a>
 ## English
 
-OcuRest is a Windows background utility designed to help users follow the 20-20-20 rule while working on a computer for long periods. It monitors head posture, eye state, and user activity to detect when a break is needed and automatically encourages healthier screen habits.
+### Overview
+The **20-20-20 rule** is an ophthalmologist-recommended practice: every 20 minutes spent looking at a screen, glance at an object at least 20 feet (6 meters) away for 20 seconds to relieve ciliary muscle fatigue.
 
-Instead of relying only on a rigid timer, OcuRest uses computer vision to check whether the user is truly looking at the screen. It can detect when the user turns away, closes their eyes, or is away from the desk, and it resets work time when a natural rest period is detected.
+**OcuRest** monitors visual focus non-intrusively. Instead of a rigid countdown timer, it verifies whether you are actively looking at the screen via computer vision.
+
+### Direct Download
+Get the ready-to-run Windows standalone executable:
+- **[Download OcuRest v1.0.0 (.exe)](https://github.com/Baoaxid/OcuRest/releases/download/v1.0.0/OcuRest.exe)** *(No Python installation required)*
 
 ### Key Features
+- **Computer Vision Tracking:** MediaPipe Face Mesh & OpenCV `solvePnP` estimate head orientation (Pitch, Yaw) and Eye Aspect Ratio (EAR).
+- **Conscious Rest Verification:** Distinguishes between looking at the screen and resting (turning away or voluntary eye closure).
+- **Smart Reset Mechanism:** Taking a break or stepping away for >= 20 seconds automatically resets the 20-minute work timer back to `00:00`.
+- **Hardware Fallback & Manual Toggle:** Automatically or manually falls back to keyboard and mouse idle monitoring (`GetLastInputInfo`) when a webcam is absent or covered.
+- **Strict Privacy (Privacy-by-Design):** Video frames are processed in-memory and discarded immediately. No local storage, no network telemetry.
+- **Customization & i18n:** Bilingual interface (English / Vietnamese) and custom notification sound support (`.mp3`, `.wav`).
 
-- Eye and head tracking with OpenCV and MediaPipe Face Mesh
-- Detection of natural rest behavior such as looking away or closing eyes
-- Automatic fallback to mouse and keyboard activity monitoring when the webcam is unavailable
-- Smart reset of work time after a valid break
-- Privacy-first design: all processing happens locally in memory
-- Multi-language support for English and Vietnamese
-- Custom alert sounds via .mp3 or .wav files
+### How It Works
+
+| State | Camera Mode (Vision) | Input Mode (Fallback) |
+| :--- | :--- | :--- |
+| **Active Work** | User faces screen with eyes open | Mouse movement or keypress detected within 5s |
+| **Pause (< 20s)** | Looking away or blinking | Inactive for < 20s (timer preserves progress) |
+| **Auto-Reset (>= 20s)** | Away / eyes closed >= 20s | Hands off input >= 20s -> Timer resets to `00:00` |
+| **Break Trigger** | Modal dialogue + looping chime alert | Modal dialogue + looping chime alert |
 
 ### Tech Stack
+- **Language:** Python 3.9+ (64-bit)
+- **Computer Vision:** OpenCV (`opencv-python`), Google MediaPipe Face Mesh
+- **Math:** NumPy
+- **Desktop UI:** Tkinter / TTK
+- **Platform & Audio:** Windows Native APIs (`GetLastInputInfo`, `winmm.dll`) & `winsound`
+- **Packaging:** PyInstaller
 
-- Python 3.9+
-- OpenCV
-- MediaPipe
-- NumPy
-- Tkinter / TTK
-- Windows API: winmm.dll, GetLastInputInfo
-- PyInstaller
-
-### System Requirements
-
-- Windows 10/11
-- Python 3.9+ 64-bit
-- Webcam recommended for accurate eye and head tracking
-- Basic desktop environment for normal operation
-
-### Installation and Run
-
-#### 1. Clone the project
+### Local Development Setup
 
 ```bash
-git clone https://github.com/Baoaxid/OcuRest.git
+# 1. Clone repository
+git clone [https://github.com/Baoaxid/OcuRest.git](https://github.com/Baoaxid/OcuRest.git)
 cd OcuRest
-```
 
-#### 2. Create a virtual environment
-
-##### Git Bash / Bash
-
-```bash
+# 2. Setup virtual environment
 python -m venv venv
 source venv/Scripts/activate
-```
 
-##### Command Prompt / PowerShell
-
-```cmd
-python -m venv venv
-venv\Scripts\activate
-```
-
-#### 3. Install dependencies
-
-```bash
+# 3. Install dependencies
 pip install -r requirements.txt
-```
 
-#### 4. Compile localization resources
-
-```bash
+# 4. Compile localization CSV to JSON
 python scripts/compile_i18n.py
-```
 
-#### 5. Run the app
-
-```bash
+# 5. Run application
 python main.py
 ```
 
-### Build Executable
-
-For Windows, the project includes a build script:
-
+### Packaging Standalone Executable
 ```cmd
 build.bat
 ```
-
-Or run with Git Bash:
-
-```bash
-./build.bat
-```
-
-After the build succeeds, the executable will be generated here:
-
-```text
-dist\OcuRest.exe
-```
-
-### Main Project Structure
-
-```text
-OcuRest/
-├─ assets/                # Icons and media assets
-├─ csv/                   # CSV data for localization
-├─ locales/               # English and Vietnamese language files
-├─ scripts/               # Helper scripts
-├─ src/                   # Main source code
-│  ├─ audio/
-│  ├─ core/
-│  ├─ platform/
-│  ├─ ui/
-│  ├─ vision/
-├─ build.bat              # Windows build script
-├─ config.json            # Default app settings
-├─ main.py                # Application entry point
-├─ requirements.txt       # Dependency list
-├─ README.md              # Project documentation
-├─ OcuRest.spec           # PyInstaller config
-└─ ...
-```
+The standalone binary will be generated at `dist/OcuRest.exe`.
 
 ---
 
+<a name="tiếng-việt"></a>
 ## Tiếng Việt
 
-OcuRest là một ứng dụng chạy ngầm trên Windows giúp người dùng tuân thủ nguyên tắc 20-20-20 khi làm việc trên máy tính trong thời gian dài. Ứng dụng theo dõi tư thế đầu, trạng thái mắt và hoạt động của người dùng để phát hiện khi cần nghỉ và nhắc nhở theo thói quen làm việc lành mạnh hơn.
+### Tổng quan
+**Quy tắc 20-20-20** là khuyến nghị y khoa phổ biến: Cứ sau mỗi 20 phút nhìn màn hình, hãy nhìn xa 20 feet (khoảng 6 mét) trong 20 giây để cơ thể mi của mắt được thả lỏng và phục hồi.
 
-Thay vì chỉ dựa vào bộ hẹn giờ cố định, OcuRest sử dụng thị giác máy tính để kiểm tra xem người dùng có thật sự đang nhìn vào màn hình hay không. Ứng dụng có thể nhận biết khi người dùng quay đầu, nhắm mắt hoặc rời khỏi bàn làm việc, đồng thời tự động reset thời gian làm việc khi phát hiện thời gian nghỉ hợp lý.
+**OcuRest** tự động hóa quy tắc này một cách thông minh. Thay vì dùng bộ đếm ngược thụ động, ứng dụng phân tích tư thế đầu và trạng thái mắt qua webcam để xác định thời gian nhìn màn hình thực tế.
+
+### Tải về trực tiếp
+Tải ngay bản chạy độc lập trên hệ điều hành Windows:
+- **[Tải OcuRest v1.0.0 (.exe)](https://github.com/Baoaxid/OcuRest/releases/download/v1.0.0/OcuRest.exe)** *(Không yêu cầu cài đặt Python)*
 
 ### Tính năng nổi bật
+- **Theo dõi thị giác máy tính:** Kết hợp MediaPipe Face Mesh và OpenCV `solvePnP` để xác định hướng mặt (Pitch, Yaw) và tỉ lệ mở mắt (EAR).
+- **Phát hiện hành vi nghỉ tự nhiên:** Ghi nhận chính xác khi người dùng nhìn ra nơi khác hoặc chủ động nhắm mắt thư giãn.
+- **Tự động làm mới chu kỳ (Smart Reset):** Nếu bạn nghỉ mắt hoặc rời bàn làm việc liên tục từ 20 giây trở lên, bộ đếm làm việc sẽ tự động đặt lại về `00:00`.
+- **Dự phòng khi không có Camera:** Hỗ trợ tự động hoặc nhấp chuột chuyển đổi sang chế độ theo dõi qua thao tác Chuột & Bàn phím (`GetLastInputInfo`) khi máy không có webcam.
+- **Bảo mật tuyệt đối (Privacy-by-Design):** Xử lý hình ảnh trực tiếp trên RAM và giải phóng tức thì; không ghi hình ảnh ra ổ đĩa, không truyền dữ liệu qua Internet.
+- **Đa ngôn ngữ & Tùy biến âm thanh:** Chuyển đổi giao diện Tiếng Việt / Tiếng Anh linh hoạt và hỗ trợ nạp chuông báo riêng (`.mp3`, `.wav`).
 
-- Theo dõi mắt và đầu bằng OpenCV và MediaPipe Face Mesh
-- Phát hiện hành vi nghỉ mắt tự nhiên như nhìn sang chỗ khác hoặc nhắm mắt
-- Chuyển sang giám sát hoạt động chuột và bàn phím khi webcam không khả dụng
-- Tự động reset thời gian làm việc sau khi nghỉ hợp lệ
-- Thiết kế ưu tiên riêng tư: xử lý dữ liệu cục bộ trong RAM
-- Hỗ trợ đa ngôn ngữ: tiếng Anh và tiếng Việt
-- Có thể tùy chỉnh âm thanh cảnh báo bằng file .mp3 hoặc .wav
+### Cơ chế hoạt động
 
-### Công nghệ sử dụng
+| Trạng thái | Chế độ Camera (Thị giác) | Chế độ Chuột & Phím (Dự phòng) |
+| :--- | :--- | :--- |
+| **Đang làm việc** | Mặt nhìn màn hình và mắt đang mở | Có thao tác chuột hoặc bàn phím trong 5s gần nhất |
+| **Tạm dừng (< 20s)** | Nhìn ra ngoài hoặc chớp mắt | Không thao tác < 20s (bộ đếm giữ nguyên vị trí) |
+| **Tự động Reset (>= 20s)** | Rời bàn / nhắm mắt >= 20s | Buông tay khỏi chuột/phím >= 20s -> Reset về `00:00` |
+| **Chuông báo nghỉ** | Hộp thoại thông báo + Chuông lặp | Hộp thoại thông báo + Chuông lặp |
 
-- Python 3.9+
-- OpenCV
-- MediaPipe
-- NumPy
-- Tkinter / TTK
-- Windows API: winmm.dll, GetLastInputInfo
-- PyInstaller
-
-### Yêu cầu hệ thống
-
-- Windows 10/11
-- Python 3.9+ 64-bit
-- Nên có webcam để theo dõi mắt và đầu chính xác hơn
-- Môi trường desktop cơ bản để ứng dụng hoạt động ổn định
-
-### Cài đặt và chạy
-
-#### 1. Clone dự án
+### Cài đặt và Chạy mã nguồn
 
 ```bash
-git clone https://github.com/Baoaxid/OcuRest.git
-cd OcuRest
-```
-
-#### 2. Tạo môi trường ảo
-
-##### Git Bash / Bash
-
-```bash
-python -m venv venv
+# 1. Kích hoạt môi trường ảo
 source venv/Scripts/activate
-```
 
-##### Command Prompt / PowerShell
-
-```cmd
-python -m venv venv
-venv\Scripts\activate
-```
-
-#### 3. Cài đặt phụ thuộc
-
-```bash
+# 2. Cài đặt các thư viện
 pip install -r requirements.txt
-```
 
-#### 4. Biên dịch tài nguyên ngôn ngữ
-
-```bash
+# 3. Biên dịch file ngôn ngữ CSV sang JSON
 python scripts/compile_i18n.py
-```
 
-#### 5. Chạy ứng dụng
-
-```bash
+# 4. Chạy ứng dụng
 python main.py
 ```
 
-### Đóng gói file exe
-
-Trên Windows, dự án có sẵn script build:
-
+### Đóng gói file chạy (.exe)
 ```cmd
 build.bat
 ```
+File thực thi độc lập sẽ nằm tại `dist/OcuRest.exe`.
 
-Hoặc chạy bằng Git Bash:
+---
 
-```bash
-./build.bat
-```
-
-Sau khi build thành công, file exe sẽ được tạo tại:
-
-```text
-dist\OcuRest.exe
-```
-
-### Cấu trúc thư mục chính
+## Project Structure / Cấu trúc thư mục
 
 ```text
 OcuRest/
-├─ assets/                # Icon và tài nguyên media
-├─ csv/                   # Dữ liệu CSV cho đa ngôn ngữ
-├─ locales/               # File dịch tiếng Anh và tiếng Việt
-├─ scripts/               # Script hỗ trợ
-├─ src/                   # Mã nguồn chính
-│  ├─ audio/
-│  ├─ core/
-│  ├─ platform/
-│  ├─ ui/
-│  ├─ vision/
-├─ build.bat              # Script build cho Windows
-├─ config.json            # Cấu hình mặc định
-├─ main.py                # Điểm khởi động ứng dụng
-├─ requirements.txt       # Danh sách thư viện
-├─ README.md              # Tài liệu dự án
-├─ OcuRest.spec           # Cấu hình PyInstaller
-└─ ...
+├─ assets/                 # Icons and media assets (.ico)
+├─ csv/                    # Localization source files (app.csv)
+├─ locales/                # Compiled i18n JSON files (en, vi)
+├─ scripts/                # Helper tools (compile_i18n.py, pack_ico.py)
+├─ src/                    # Application source code
+│  ├─ audio/               # WinMM MCI audio controller
+│  ├─ core/                # Configuration and resource resolution
+│  ├─ platform/            # Native Win32 idle input listeners
+│  ├─ ui/                  # Tkinter UI controllers and i18n loaders
+│  └─ vision/              # MediaPipe Face Mesh, Head Pose & EAR
+├─ .gitignore              # Git ignore configuration
+├─ build.bat               # Automated build pipeline for Windows
+├─ main.py                 # Application runtime entry point
+├─ requirements.txt        # Runtime and build dependencies
+└─ README.md               # Project documentation
 ```
 
-### Lưu ý quan trọng
-
-- Dự án hiện tối ưu cho hệ điều hành Windows.
-- Chức năng phát hiện hướng nhìn phụ thuộc vào camera và điều kiện ánh sáng.
-- Nếu webcam không hoạt động, ứng dụng sẽ chuyển sang chế độ dự phòng dựa trên hoạt động chuột và bàn phím.
-- Dữ liệu nhạy cảm được xử lý cục bộ và không lưu trữ hình ảnh trên ổ đĩa.
-
-### Giới hạn và mục tiêu
-
-OcuRest nhằm hỗ trợ bảo vệ sức khỏe mắt khi làm việc lâu, đồng thời giữ trải nghiệm nhẹ, riêng tư và tự động hóa tốt nhất có thể.
+## License
+Distributed under the MIT License. See `LICENSE` for more information.
