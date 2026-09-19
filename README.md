@@ -72,7 +72,7 @@ Get the ready-to-run Windows standalone executable:
 
 ```bash
 # 1. Clone repository
-git clone [https://github.com/Baoaxid/OcuRest.git](https://github.com/Baoaxid/OcuRest.git)
+git clone https://github.com/Baoaxid/OcuRest.git
 cd OcuRest
 
 # 2. Setup virtual environment
