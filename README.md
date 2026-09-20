@@ -39,7 +39,7 @@ The **20-20-20 rule** is an ophthalmologist-recommended practice: every 20 minut
 
 Get the ready-to-run Windows standalone executable:
 
-- **[Download OcuRest v1.0.0 (.exe)](https://github.com/Baoaxid/OcuRest/releases/download/v1.0.0/OcuRest.exe)** _(No Python installation required)_
+- **[Download OcuRest (.exe)](https://github.com/Baoaxid/OcuRest/releases/latest/download/OcuRest.exe)** _(No Python installation required)_
 
 ### Key Features
 
@@ -113,7 +113,7 @@ The standalone binary will be generated at `dist/OcuRest.exe`.
 
 Tải ngay bản chạy độc lập trên hệ điều hành Windows:
 
-- **[Tải OcuRest v1.0.0 (.exe)](https://github.com/Baoaxid/OcuRest/releases/download/v1.0.0/OcuRest.exe)** _(Không yêu cầu cài đặt Python)_
+- **[Tải OcuRest (.exe)](https://github.com/Baoaxid/OcuRest/releases/latest/download/OcuRest.exe)** _(Không yêu cầu cài đặt Python)_
 
 ### Tính năng nổi bật
 
