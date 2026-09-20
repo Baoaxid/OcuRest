@@ -4,6 +4,8 @@ import time
 import threading
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
+from PIL import Image
+import pystray
 
 from src.core.config import AppConfig, ConfigManager
 from src.core.resources import resolve_resource_path
@@ -27,7 +29,7 @@ class MainWindow:
         self.root.geometry("400x310")
         self.root.resizable(False, False)
 
-        # Apply custom application icon if available
+        # Apply application icon
         self._apply_window_icon()
 
         # State machine identifiers: WORKING, WORK_DONE, RESTING, REST_DONE
@@ -38,12 +40,17 @@ class MainWindow:
 
         self.setup_ui()
 
+        # System tray setup
+        self.tray_icon = None
+        self.setup_tray_icon()
+
+        # Intercept window close event to hide into tray instead of exiting
+        self.root.protocol("WM_DELETE_WINDOW", self.hide_to_tray)
+
         # Background monitoring thread
         self.running = True
         self.worker_thread = threading.Thread(target=self.tracking_loop, daemon=True)
         self.worker_thread.start()
-
-        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def _apply_window_icon(self) -> None:
         """Sets application window icon handling multi-environment resolution."""
@@ -53,6 +60,41 @@ class MainWindow:
                 self.root.iconbitmap(default=str(icon_path))
             except Exception as err:
                 print(f"[MainWindow] Failed to set window icon: {err}")
+
+    def setup_tray_icon(self) -> None:
+        """Initializes system tray icon running in a detached background thread."""
+        icon_path = resolve_resource_path("assets/icon.ico")
+        image = Image.open(icon_path) if icon_path.exists() else Image.new("RGBA", (64, 64), "#0f766e")
+
+        menu = pystray.Menu(
+            pystray.MenuItem("Mở OcuRest", self.show_window, default=True),
+            pystray.MenuItem("Thoát", self.quit_application)
+        )
+        self.tray_icon = pystray.Icon("OcuRest", image, "OcuRest - 20-20-20 Guardian", menu)
+        threading.Thread(target=self.tray_icon.run, daemon=True).start()
+
+    def hide_to_tray(self) -> None:
+        """Hides the main window from the screen and taskbar."""
+        self.root.withdraw()
+
+    def show_window(self, icon=None, item=None) -> None:
+        """Restores and focuses the main window from system tray."""
+        self.root.after(0, self._restore_window)
+
+    def _restore_window(self) -> None:
+        self.root.deiconify()
+        self.root.lift()
+        self.root.focus_force()
+
+    def quit_application(self, icon=None, item=None) -> None:
+        """Completely terminates the application process."""
+        self.running = False
+        if self.tray_icon:
+            self.tray_icon.stop()
+        self.audio.stop()
+        self.tracker.release()
+        self.root.after(0, self.root.destroy)
+        sys.exit(0)
 
     def setup_ui(self) -> None:
         """Initializes and arranges GUI components."""
@@ -160,7 +202,6 @@ class MainWindow:
                     is_facing, is_open = self.tracker.inspect_frame()
                     user_active = is_facing and is_open
                 else:
-                    # In input fallback: user active if input received within 5 seconds
                     user_active = idle_sec < 5.0
 
                 if user_active:
@@ -169,7 +210,6 @@ class MainWindow:
                     self.lbl_subtext.config(text=self.i18n.t("subtext.work_active"))
                 else:
                     self.afk_duration += 1.0
-                    # Auto-reset work accumulation if user has rested for required duration
                     if self.afk_duration >= self.config.afk_timeout:
                         self.work_accumulated = 0.0
                         self.afk_duration = 0.0
@@ -188,13 +228,11 @@ class MainWindow:
                     is_facing, is_open = self.tracker.inspect_frame()
                     is_resting = (not is_facing) or (not is_open)
                 else:
-                    # Resting is valid ONLY when user stays away from input devices
                     is_resting = idle_sec >= 1.0
 
                 if is_resting:
                     self.rest_accumulated += 1.0
                 else:
-                    # Penalty: Looking at screen or touching inputs resets rest cycle
                     self.rest_accumulated = 0.0
 
                 self.lbl_timer.config(text=f"{int(self.rest_accumulated):02d}s / 20s")
@@ -210,6 +248,7 @@ class MainWindow:
 
     def trigger_break_prompt(self) -> None:
         """Displays modal dialogue when work interval is completed."""
+        self._restore_window()
         self.audio.start_loop(self.config.custom_sound, self.config.muted)
         self.root.attributes("-topmost", True)
         
@@ -228,6 +267,7 @@ class MainWindow:
 
     def trigger_resume_prompt(self) -> None:
         """Displays modal dialogue when rest interval is completed."""
+        self._restore_window()
         self.audio.start_loop(self.config.custom_sound, self.config.muted)
         self.root.attributes("-topmost", True)
         messagebox.showinfo(self.i18n.t("alert.rest_title"), self.i18n.t("alert.rest_msg"))
@@ -239,11 +279,3 @@ class MainWindow:
         self.afk_duration = 0.0
         self.state = "WORKING"
         self.lbl_status.config(text=self.i18n.t("mode.work"))
-
-    def on_close(self) -> None:
-        """Cleans up threads, audio engines, and hardware locks prior to exit."""
-        self.running = False
-        self.audio.stop()
-        self.tracker.release()
-        self.root.destroy()
-        sys.exit(0)
